@@ -1,7 +1,9 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
 import { EmbedBuilder } from 'discord.js';
-import rule from './layouts/rule.json';
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const rule = require('./layouts/rule.json')
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
 async function editDiscordMessage(content) {
@@ -47,27 +49,37 @@ function unixTimeToFormattedDate(unixTime) {
 
 const embedList = [];
 
-rule.forEach((raw) => {
-    if (raw.type == 'text') {
-        fs.readFile(raw.file, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading the file:', err);
-                return;
-            }
+let ready = true;
 
+const processRule = async (raw) => {
+    if (raw.type === 'text') {
+        try {
+            const data = await fs.promises.readFile(raw.file, 'utf8');
             const embed = new EmbedBuilder()
                 .setColor(16722148)
                 .setDescription(data);
-
+    
             embedList.push(embed);
-        })
-    } else if (raw.type == 'image') {
+            console.log(embed);
+        } catch (err) {
+            console.error('Error reading the file:', err);
+        }
+    } else if (raw.type === 'image') {
         const embed = new EmbedBuilder()
             .setColor(16722148)
             .setImage(raw.file);
-
+    
         embedList.push(embed);
+        console.log(embed);
     }
-});
+};
 
-await editDiscordMessage({ content: '', embeds: embedList });
+(async () => {
+    for (const raw of rule) {
+        await processRule(raw);
+    }
+
+    console.log(JSON.stringify(embedList));
+
+    await editDiscordMessage({ content: '', embeds: embedList });
+})();
