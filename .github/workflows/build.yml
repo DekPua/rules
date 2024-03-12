@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run_node_script:
+  edit_message:
     runs-on: ubuntu-latest
     env:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

@@ -23,11 +23,8 @@ async function editDiscordMessage(content) {
 }
 
 function unixTimeToFormattedDate(unixTime) {
-    // Convert Unix timestamp to milliseconds
-    const milliseconds = unixTime * 1000;
-
     // Create a new Date object using the milliseconds
-    const date = new Date(milliseconds);
+    const date = new Date(unixTime);
 
     // Define month names in Thai
     const thaiMonths = [
@@ -55,8 +52,8 @@ fs.readFile(filePath, 'utf8', async (err, data) => {
     };
 
     let editText = data;
-    editText.replace('${Sever.Name}', "DekPua");
-    editText.replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()));
+    editText = editText.replace('${Sever.Name}', "DekPua");
+    editText = editText.replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()));
 
     console.log(editText);
 
