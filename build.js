@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fetch = require('node-fetch');
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
 async function editDiscordMessage(content) {
