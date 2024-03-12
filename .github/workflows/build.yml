@@ -1,4 +1,4 @@
-name: Edit Discord Webhook Message
+name: Run Node.js Script
 
 on:
   push:
@@ -6,23 +6,21 @@ on:
       - main
 
 jobs:
-  edit_discord_webhook_message:
+  run_node_script:
     runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Read contents of rule.md
-        id: read_file
-        run: |
-          CONTENT=$(cat rule.md)
-          echo "::set-output name=content::$CONTENT"
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-      - name: Edit Discord Webhook Message
-        run: |
-          curl -X PATCH \
-          -H "Content-Type: application/json" \
-          -d "{\"content\":\"${{ steps.read_file.outputs.content }}\"}" \
-          ${secrets.DISCORD_WEBHOOK_URL}
-        env:
-          secrets.DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Node.js script
+        run: node your_script.js
