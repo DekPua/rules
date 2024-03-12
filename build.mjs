@@ -1,9 +1,9 @@
-import fs from 'fs';
-import fetch from 'node-fetch';
-import { EmbedBuilder } from 'discord.js';
 import { createRequire } from "module";
+import fetch from 'node-fetch';
 const require = createRequire(import.meta.url);
-const rule = require('./layouts/rule.json')
+const fs = require('fs');
+const { EmbedBuilder } = require('discord.js');
+const rule = require('./layouts/rule.json');
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
 async function editDiscordMessage(content) {
@@ -55,9 +55,11 @@ const processRule = async (raw) => {
     if (raw.type === 'text') {
         try {
             const data = await fs.promises.readFile(raw.file, 'utf8');
+
+            let description = data.replace('${Sever.Name}', "DekPua").replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()))
             const embed = new EmbedBuilder()
                 .setColor(16722148)
-                .setDescription(data);
+                .setDescription(description);
     
             embedList.push(embed);
             console.log(embed);
