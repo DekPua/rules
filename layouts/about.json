@@ -14,5 +14,9 @@
     {
         "type": "text",
         "file": "data/about-3.md"
+    },
+    {
+        "type": "text",
+        "file": "data/about-4.md"
     }
 ]
