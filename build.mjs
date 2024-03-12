@@ -55,7 +55,5 @@ fs.readFile(filePath, 'utf8', async (err, data) => {
     editText = editText.replace('${Sever.Name}', "DekPua");
     editText = editText.replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()));
 
-    console.log(editText);
-
     await editDiscordMessage({ content: editText });
 });
