@@ -1,5 +1,7 @@
-import fs from 'fs'; 
+import fs from 'fs';
 import fetch from 'node-fetch';
+import { EmbedBuilder } from 'discord.js';
+import rule from './layouts/rule.json' with { type: "json" };
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
 async function editDiscordMessage(content) {
@@ -43,17 +45,29 @@ function unixTimeToFormattedDate(unixTime) {
     return formattedDate;
 }
 
-// Read the contents of the Markdown file asynchronously
-const filePath = 'data/rule.md'; // Replace 'your_file.md' with the path to your Markdown file
-fs.readFile(filePath, 'utf8', async (err, data) => {
-    if (err) {
-        console.error('Error reading the file:', err);
-        return;
-    };
+const embedList = [];
 
-    let editText = data;
-    editText = editText.replace('${Sever.Name}', "DekPua");
-    editText = editText.replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()));
+rule.forEach((raw) => {
+    if (raw.type == 'text') {
+        fs.readFile(raw.file, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading the file:', err);
+                return;
+            }
 
-    await editDiscordMessage({ content: editText });
+            const embed = new EmbedBuilder()
+                .setColor(16722148)
+                .setDescription(data);
+
+            embedList.push(embed);
+        })
+    } else if (raw.type == 'image') {
+        const embed = new EmbedBuilder()
+            .setColor(16722148)
+            .setImage(raw.file);
+
+        embedList.push(embed);
+    }
 });
+
+await editDiscordMessage({ content: '', embeds: embedList });
