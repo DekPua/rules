@@ -1,7 +1,7 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
 import { EmbedBuilder } from 'discord.js';
-import rule from './layouts/rule.json' with { type: "json" };
+import rule from './layouts/rule.json';
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
 async function editDiscordMessage(content) {
