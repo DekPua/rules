@@ -9,7 +9,8 @@ jobs:
   edit_message:
     runs-on: ubuntu-latest
     env:
-      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        DISCORD_RULE_WEBHOOK_URL: ${{ secrets.DISCORD_RULE_WEBHOOK_URL }}
+        DISCORD_ABOUT_WEBHOOK_URL: ${{ secrets.DISCORD_ABOUT_WEBHOOK_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

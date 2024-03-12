@@ -1,0 +1,18 @@
+[
+    {
+        "type": "image",
+        "file": "https://cdn.jsdelivr.net/gh/hewkawar/Dek-Pua-Storage@main/DekPua-About.png"
+    },
+    {
+        "type": "text",
+        "file": "data/about-1.md"
+    },
+    {
+        "type": "text",
+        "file": "data/about-2.md"
+    },
+    {
+        "type": "text",
+        "file": "data/about-3.md"
+    }
+]

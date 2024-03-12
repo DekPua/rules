@@ -4,11 +4,13 @@ const require = createRequire(import.meta.url);
 const fs = require('fs');
 const { EmbedBuilder } = require('discord.js');
 const rule = require('./layouts/rule.json');
-const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+const about = require('./layouts/about.json');
+const ruleWebhookUrl = process.env.DISCORD_RULE_WEBHOOK_URL;
+const aboutWebhookUrl = process.env.DISCORD_ABOUT_WEBHOOK_URL;
 
-async function editDiscordMessage(content) {
+async function editDiscordMessage(content, webhookUrl) {
     try {
-        const response = await fetch(discordWebhookUrl, {
+        const response = await fetch(webhookUrl, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,31 +29,26 @@ async function editDiscordMessage(content) {
 }
 
 function unixTimeToFormattedDate(unixTime) {
-    // Create a new Date object using the milliseconds
     const date = new Date(unixTime);
 
-    // Define month names in Thai
     const thaiMonths = [
         'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
         'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
     ];
 
-    // Get day, month, and year
     const day = date.getDate();
     const month = thaiMonths[date.getMonth()];
-    const year = date.getFullYear() + 543; // Convert to Thai Buddhist calendar year
+    const year = date.getFullYear() + 543;
 
-    // Format the date string
     const formattedDate = `${day} ${month} ${year}`;
 
     return formattedDate;
 }
 
-const embedList = [];
+const ruleEmbedList = [];
+const aboutEmbedList = [];
 
-let ready = true;
-
-const processRule = async (raw) => {
+const processRuleEmbed = async (raw) => {
     if (raw.type === 'text') {
         try {
             const data = await fs.promises.readFile(raw.file, 'utf8');
@@ -60,9 +57,8 @@ const processRule = async (raw) => {
             const embed = new EmbedBuilder()
                 .setColor(16722148)
                 .setDescription(description);
-    
-            embedList.push(embed);
-            console.log(embed);
+
+            ruleEmbedList.push(embed);
         } catch (err) {
             console.error('Error reading the file:', err);
         }
@@ -70,18 +66,43 @@ const processRule = async (raw) => {
         const embed = new EmbedBuilder()
             .setColor(16722148)
             .setImage(raw.file);
-    
-        embedList.push(embed);
-        console.log(embed);
+
+        ruleEmbedList.push(embed);
+    }
+};
+
+const processAboutEmbed = async (raw) => {
+    if (raw.type === 'text') {
+        try {
+            const data = await fs.promises.readFile(raw.file, 'utf8');
+
+            let description = data.replace('${Sever.Name}', "DekPua").replace('${Date.LastUpdate}', unixTimeToFormattedDate(Date.now()))
+            const embed = new EmbedBuilder()
+                .setColor(16722148)
+                .setDescription(description);
+
+            aboutEmbedList.push(embed);
+        } catch (err) {
+            console.error('Error reading the file:', err);
+        }
+    } else if (raw.type === 'image') {
+        const embed = new EmbedBuilder()
+            .setColor(16722148)
+            .setImage(raw.file);
+
+        aboutEmbedList.push(embed);
     }
 };
 
 (async () => {
     for (const raw of rule) {
-        await processRule(raw);
+        await processRuleEmbed(raw);
     }
 
-    console.log(JSON.stringify(embedList));
+    for (const raw of about) {
+        await processAboutEmbed(raw);
+    }
 
-    await editDiscordMessage({ content: '', embeds: embedList });
+    await editDiscordMessage({ content: '', embeds: ruleEmbedList }, ruleWebhookUrl);
+    await editDiscordMessage({ content: '', embeds: aboutEmbedList }, aboutWebhookUrl);
 })();
