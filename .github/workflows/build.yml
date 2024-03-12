@@ -1,0 +1,28 @@
+name: Edit Discord Webhook Message
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  edit_discord_webhook_message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read contents of rule.md
+        id: read_file
+        run: |
+          CONTENT=$(cat rule.md)
+          echo "::set-output name=content::$CONTENT"
+
+      - name: Edit Discord Webhook Message
+        run: |
+          curl -X PATCH \
+          -H "Content-Type: application/json" \
+          -d "{\"content\":\"${{ steps.read_file.outputs.content }}\"}" \
+          ${secrets.DISCORD_WEBHOOK_URL}
+        env:
+          secrets.DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
