@@ -1,7 +1,11 @@
 [
     {
         "type": "image",
-        "file": "https://cdn.jsdelivr.net/gh/hewkawar/Dek-Pua-Storage@main/DekPua-Rules-2.png"
+        "file": "https://cdn.jsdelivr.net/gh/hewkawar/Dek-Pua-Storage@main/DekPua-Rules-2.png",
+        "image": {
+            "width": 1200,
+            "height": 300
+        }
     },
     {
         "type": "text",
