@@ -1,0 +1,26 @@
+[
+    {
+        "type": "image",
+        "file": "https://cdn.jsdelivr.net/gh/DekPua/storage@main/DekPua-bg-none.png"
+    },
+    {
+        "type": "text",
+        "file": "data/home-dekpua.md"
+    },
+    {
+        "type": "image",
+        "file": "https://cdn.jsdelivr.net/gh/DekPua/storage@main/discord-preview%20(1).png"
+    },
+    {
+        "type": "text",
+        "file": "data/home-preview.md"
+    },
+    {
+        "type": "image",
+        "file": "https://cdn.jsdelivr.net/gh/DekPua/storage@main/Screenshot%202024-03-14%20234245.png"
+    },
+    {
+        "type": "text",
+        "file": "daat/home-auto_voice_chat.md"
+    }
+]
